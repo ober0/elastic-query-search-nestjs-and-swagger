@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+    elastic-search-postgres:
+        image: postgres:15
+        container_name: elastic-search-postgres
+        restart: always
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: elastic-search
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+
+
+    elastic-search-backend:
+        build: .
+        container_name: elastic-search-backend
+        restart: always
+        depends_on:
+            - elastic-search-postgres
+        environment:
+            DATABASE_URL: postgres://admin:admin@elastic-search-postgres:5432/elastic-search
+            NODE_ENV: production
+        env_file:
+            - .env
+        ports:
+            - "3000:3000"
+        command: >
+            sh -c "
+                ./scripts/migration-mode.sh
+                npm run generate
+                npm run seed:deploy
+                npm run prod
+            " 
+
+
+volumes:
+    pgdata:
