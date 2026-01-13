@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsDate, IsOptional, IsString, IsArray } from "class-validator";
+import { IsDate, IsOptional, IsString, IsArray, IsBoolean } from "class-validator";
 import { Transform } from "class-transformer";
 import { IsNumber } from "class-validator";
 import { IntersectionType } from "@nestjs/swagger";
@@ -117,6 +117,11 @@ export function GenerateQueryDto<T extends object>(dto: new () => T) {
                 IsNumber()(ModifiedDto.prototype, key);
             } else if (propertyType === String) {
                 IsString()(ModifiedDto.prototype, key);
+            } else if (propertyType === Boolean) {
+                Transform(({ value }) => {
+                    return value === "true";
+                })(ModifiedDto.prototype, key);
+                IsBoolean()(ModifiedDto.prototype, key);
             }
         }
     }

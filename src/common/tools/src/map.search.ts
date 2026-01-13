@@ -21,7 +21,12 @@ export function mapSearch<T>(
 
     if (filters) {
         for (const [key, value] of Object.entries(filters)) {
-            if (!value) {
+            if (
+                value === undefined ||
+                value === null ||
+                (typeof value === "string" && value.trim() === "") ||
+                (Array.isArray(value) && value.length === 0)
+            ) {
                 continue;
             }
 
