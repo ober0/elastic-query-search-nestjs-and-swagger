@@ -62,7 +62,7 @@ export function GenerateQueryDto<T extends object>(dto: new () => T) {
         } else if (propertyType === Array) {
             const swaggerMetadata = Reflect.getMetadata("swagger/apiModelProperties", dto.prototype, key);
 
-            const arrayType = swaggerMetadata.type ?? String;
+            const arrayType = swaggerMetadata.type ?? 'string';
 
             Object.defineProperty(ModifiedDto.prototype, key, {
                 value: undefined,
@@ -87,7 +87,7 @@ export function GenerateQueryDto<T extends object>(dto: new () => T) {
                         }
                         return splited;
                     }
-                    if (arrayType === String) {
+                    if (arrayType === 'string') {
                         return [value];
                     }
                     const numberValue = parseInt(value);
@@ -98,9 +98,9 @@ export function GenerateQueryDto<T extends object>(dto: new () => T) {
             IsOptional()(ModifiedDto.prototype, key);
             IsArray()(ModifiedDto.prototype, key);
 
-            if (arrayType === Number) {
+            if (arrayType === 'number') {
                 IsNumber({}, { each: true })(ModifiedDto.prototype, key);
-            } else if (arrayType === String) {
+            } else if (arrayType === 'string') {
                 IsString({ each: true })(ModifiedDto.prototype, key);
             }
         } else {
