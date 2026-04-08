@@ -11,7 +11,7 @@ import { DateMinMaxFilterDto, NumberMinMaxFilterDto } from "../../common-dto/src
 // @query поле поиска
 // @queryFields массив полей по которым будет поиск, например name или users.some.name
 export function mapSearch<T>(
-    filters: T,
+    filters: T | undefined,
     modifiedPath: { key: keyof T; path: string }[] = [],
     excludedValues: (keyof T | string)[] = [],
     query?: string,
